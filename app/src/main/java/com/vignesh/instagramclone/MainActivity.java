@@ -111,6 +111,7 @@ public class MainActivity extends AppCompatActivity {
         alertDialog.show();
 
         ParseQuery<ParseObject> parseQuery = ParseQuery.getQuery("KickBoxer");
+        parseQuery.whereContains("boxer_name", "Vignesh");
         parseQuery.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> objects, ParseException e) {
