@@ -9,10 +9,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.parse.GetCallback;
 import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseInstallation;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.SaveCallback;
 
 import es.dmoral.toasty.Toasty;
@@ -20,7 +22,8 @@ import es.dmoral.toasty.Toasty;
 public class MainActivity extends AppCompatActivity {
 
     private EditText edtBoxerName, edtKickSpeed, edtKickPower, edtPunchSpeed, edtPunchPower;
-    private Button btnSave;
+    private Button btnSave, btnGetData;
+    private TextView txtGetData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +38,8 @@ public class MainActivity extends AppCompatActivity {
         edtPunchSpeed = findViewById(R.id.edtPunchSpeed);
         edtPunchPower = findViewById(R.id.edtPunchPower);
         btnSave = findViewById(R.id.btnSave);
+        btnGetData = findViewById(R.id.btnGetData);
+        txtGetData = findViewById(R.id.txtGetData);
 
     }
 
@@ -63,5 +68,33 @@ public class MainActivity extends AppCompatActivity {
         } catch (Exception e) {
             Toasty.error(MainActivity.this, "Error: " + e, Toast.LENGTH_LONG, true).show();
         }
+    }
+
+    public void getData(View view) {
+
+        ParseQuery<ParseObject> parseQuery = ParseQuery.getQuery("KickBoxer");
+        parseQuery.getInBackground("kompGYF0QQ", new GetCallback<ParseObject>() {
+            @Override
+            public void done(ParseObject object, ParseException e) {
+
+                if (object != null && e == null) {
+
+                    String getData = "Name - " + object.get("boxer_name") + "\n" +
+                            "Kick Speed - " + object.get("kick_speed") + "\n" +
+                            "Kick Power - " + object.get("kick_power") + "\n" +
+                            "Punch Speed - " + object.get("punch_speed") + "\n" +
+                            "Punch Power - " + object.get("punch_power");
+
+                    txtGetData.setText(getData);
+
+                } else {
+
+                    Toasty.error(MainActivity.this, "Object is NULL or Error: " + e, Toast.LENGTH_LONG, true).show();
+
+                }
+
+            }
+        });
+
     }
 }
