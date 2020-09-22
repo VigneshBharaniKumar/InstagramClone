@@ -15,6 +15,8 @@ import com.parse.ParseInstallation;
 import com.parse.ParseObject;
 import com.parse.SaveCallback;
 
+import es.dmoral.toasty.Toasty;
+
 public class MainActivity extends AppCompatActivity {
 
     private EditText edtBoxerName, edtKickSpeed, edtKickPower, edtPunchSpeed, edtPunchPower;
@@ -38,23 +40,28 @@ public class MainActivity extends AppCompatActivity {
 
     public void save (View view) {
 
-        final ParseObject object = new ParseObject("KickBoxer");
-        object.put("boxer_name", edtBoxerName.getText().toString());
-        object.put("kick_speed", Integer.parseInt(edtKickSpeed.getText().toString()));
-        object.put("kick_power", Integer.parseInt(edtKickPower.getText().toString()));
-        object.put("punch_speed", Integer.parseInt(edtPunchSpeed.getText().toString()));
-        object.put("punch_power", Integer.parseInt(edtPunchPower.getText().toString()));
-        object.saveInBackground(new SaveCallback() {
-            @Override
-            public void done(ParseException e) {
-                if (e == null) {
-                    Toast.makeText(MainActivity.this, object.get("boxer_name") + " Saved Successfully", Toast.LENGTH_SHORT).show();
-                }
-                else {
-                    Toast.makeText(MainActivity.this, "Failed: " + e, Toast.LENGTH_LONG).show();
-                }
-            }
-        });
+        try {
 
+            final ParseObject object = new ParseObject("KickBoxer");
+            object.put("boxer_name", edtBoxerName.getText().toString());
+            object.put("kick_speed", Integer.parseInt(edtKickSpeed.getText().toString()));
+            object.put("kick_power", Integer.parseInt(edtKickPower.getText().toString()));
+            object.put("punch_speed", Integer.parseInt(edtPunchSpeed.getText().toString()));
+            object.put("punch_power", Integer.parseInt(edtPunchPower.getText().toString()));
+            object.saveInBackground(new SaveCallback() {
+                @Override
+                public void done(ParseException e) {
+                    if (e == null) {
+                        //Toast.makeText(MainActivity.this, object.get("boxer_name") + " Saved Successfully", Toast.LENGTH_SHORT).show();
+                        Toasty.success(MainActivity.this, object.get("boxer_name") + " is saved", Toasty.LENGTH_SHORT,true).show();
+                    } else {
+                        Toasty.warning(MainActivity.this, "Failed: " + e, Toast.LENGTH_LONG).show();
+                    }
+                }
+            });
+
+        } catch (Exception e) {
+            Toasty.error(MainActivity.this, "Error: " + e, Toast.LENGTH_LONG, true).show();
+        }
     }
 }
