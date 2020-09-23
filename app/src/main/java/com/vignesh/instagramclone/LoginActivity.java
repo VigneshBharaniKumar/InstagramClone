@@ -2,8 +2,10 @@ package com.vignesh.instagramclone;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
-import android.widget.EditText;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -17,6 +19,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 public class LoginActivity extends AppCompatActivity {
 
     private TextInputLayout edtUserName, edtPassword;
+    private Button btnLogin, btnSignUp;
     private SweetAlertDialog alertDialog;
 
     @Override
@@ -28,6 +31,28 @@ public class LoginActivity extends AppCompatActivity {
 
         edtUserName = findViewById(R.id.edtUserName_login);
         edtPassword = findViewById(R.id.edtPassword_login);
+        btnLogin = findViewById(R.id.btnLogin_login);
+        btnSignUp = findViewById(R.id.btnSignUp_login);
+
+        edtPassword.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_DOWN) {
+                    login(btnLogin);
+                }
+                return false;
+            }
+        });
+
+        edtUserName.setAlpha(0);
+        edtPassword.setAlpha(0);
+        btnLogin.setAlpha(0);
+        btnSignUp.setAlpha(0);
+
+        edtUserName.animate().alpha(1).setDuration(500);
+        edtPassword.animate().alpha(1).setDuration(500);
+        btnLogin.animate().alpha(1).setDuration(1000);
+        btnSignUp.animate().alpha(1).setDuration(1000);
 
     }
 
@@ -89,6 +114,17 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+
+    }
+
+    public void onClickRootLayout(View view) {
+
+        try {
+            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),0);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
 
     }
 }
