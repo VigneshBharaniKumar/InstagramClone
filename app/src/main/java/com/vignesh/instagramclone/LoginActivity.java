@@ -44,6 +44,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        /*ANIMATION - STARTS*/
         edtUserName.setAlpha(0);
         edtPassword.setAlpha(0);
         btnLogin.setAlpha(0);
@@ -53,6 +54,13 @@ public class LoginActivity extends AppCompatActivity {
         edtPassword.animate().alpha(1).setDuration(500);
         btnLogin.animate().alpha(1).setDuration(1000);
         btnSignUp.animate().alpha(1).setDuration(1000);
+        /*ANIMATION - ENDS*/
+
+        /*If User already logged in -> Directly navigates to Home activity (No Login Needed)*/
+        if (ParseUser.getCurrentUser() != null) {
+            Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+            startActivity(intent);
+        }
 
     }
 
