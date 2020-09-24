@@ -3,6 +3,8 @@ package com.vignesh.instagramclone;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,11 +20,17 @@ import com.parse.ParseUser;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
 public class UsersTab extends Fragment {
 
     private ListView listView;
     private ArrayList usersList;
     private ArrayAdapter adapter;
+
+    private RecyclerView usersRecyclerView;
+
+    private SweetAlertDialog alertDialog;
 
     private static final String NAME_KEY = "name";
     private static final String USER_NAME_KEY = "username";
@@ -51,12 +59,18 @@ public class UsersTab extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_users_tab, container, false);
+        View view = inflater.inflate(R.layout.fragment_users_tab_recycler_view, container, false);
 
         listView = view.findViewById(R.id.listView_UsersTab);
+        usersRecyclerView = view.findViewById(R.id.recyclerView_UsersTab);
 
         usersList = new ArrayList();
         adapter = new ArrayAdapter(getContext(), android.R.layout.simple_expandable_list_item_1, usersList);
+
+        alertDialog = new SweetAlertDialog(getContext(), SweetAlertDialog.PROGRESS_TYPE);
+        alertDialog.setTitleText("Loading");
+        alertDialog.setCancelable(true);
+        alertDialog.show();
 
         ParseQuery<ParseUser> query = ParseUser.getQuery();
         query.whereNotEqualTo(USER_NAME_KEY, ParseUser.getCurrentUser().getUsername());
@@ -74,7 +88,12 @@ public class UsersTab extends Fragment {
 
                         }
 
-                        listView.setAdapter(adapter);
+                        //listView.setAdapter(adapter);
+
+                        usersRecyclerView.setAdapter(new UsersRecyclerAdapter(usersList));
+                        usersRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+                        alertDialog.dismissWithAnimation();
 
                     }
 
@@ -82,6 +101,8 @@ public class UsersTab extends Fragment {
 
             }
         });
+
+
 
         return view;
     }
