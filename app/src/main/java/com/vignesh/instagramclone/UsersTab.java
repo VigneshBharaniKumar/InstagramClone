@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -29,8 +30,7 @@ public class UsersTab extends Fragment {
     private ArrayAdapter adapter;
 
     private RecyclerView usersRecyclerView;
-
-    private SweetAlertDialog alertDialog;
+    private TextView txtLoading;
 
     private static final String NAME_KEY = "name";
     private static final String USER_NAME_KEY = "username";
@@ -60,17 +60,14 @@ public class UsersTab extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_users_tab_recycler_view, container, false);
+        //View view = inflater.inflate(R.layout.fragment_users_tab, container, false);
 
         listView = view.findViewById(R.id.listView_UsersTab);
         usersRecyclerView = view.findViewById(R.id.recyclerView_UsersTab);
+        txtLoading = view.findViewById(R.id.txtLoading);
 
         usersList = new ArrayList();
         adapter = new ArrayAdapter(getContext(), android.R.layout.simple_expandable_list_item_1, usersList);
-
-        alertDialog = new SweetAlertDialog(getContext(), SweetAlertDialog.PROGRESS_TYPE);
-        alertDialog.setTitleText("Loading");
-        alertDialog.setCancelable(true);
-        alertDialog.show();
 
         ParseQuery<ParseUser> query = ParseUser.getQuery();
         query.whereNotEqualTo(USER_NAME_KEY, ParseUser.getCurrentUser().getUsername());
@@ -90,10 +87,10 @@ public class UsersTab extends Fragment {
 
                         //listView.setAdapter(adapter);
 
+                        txtLoading.animate().alpha(0).setDuration(1000);
+
                         usersRecyclerView.setAdapter(new UsersRecyclerAdapter(usersList));
                         usersRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-                        alertDialog.dismissWithAnimation();
 
                     }
 
