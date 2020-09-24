@@ -38,9 +38,16 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_DOWN) {
-                    login(btnLogin);
+                    login();
                 }
                 return false;
+            }
+        });
+
+        btnLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                login();
             }
         });
 
@@ -71,7 +78,7 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    public void login(View view) {
+    public void login() {
 
         alertDialog = new SweetAlertDialog(LoginActivity.this, SweetAlertDialog.PROGRESS_TYPE);
         alertDialog.setTitleText("Loading");

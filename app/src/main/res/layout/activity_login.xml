@@ -143,7 +143,6 @@
             android:text="@string/btn_log_in"
             android:layout_weight="1"
             android:layout_margin="5dp"
-            android:onClick="login"
             android:background="#FF006E"
             android:textColor="#FFF"/>
 

@@ -1,9 +1,11 @@
 package com.vignesh.instagramclone;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -20,6 +22,8 @@ import java.util.Objects;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
+import static androidx.core.content.ContextCompat.getSystemService;
+
 public class ProfileTab extends Fragment {
 
     private TextInputLayout edtName_ProfileTab, edtUserName_ProfileTab, edtWebsite_ProfileTab, edtBio_ProfileTab, edtEmailID_ProfileTab, edtPhoneNumber_ProfileTab, edtGender_ProfileTab;
@@ -31,6 +35,14 @@ public class ProfileTab extends Fragment {
     private SweetAlertDialog alertDialog;
 
     private String[] gender = {"Male", "Female", "Others", "Prefer Not to Say"};
+
+    private static final String NAME_KEY = "name";
+    private static final String USER_NAME_KEY = "username";
+    private static final String WEBSITE_KEY = "website";
+    private static final String BIO_KEY = "bio";
+    private static final String EMAIL_ID_KEY = "email";
+    private static final String PHONE_NUMBER_KEY = "phone_number";
+    private static final String GENDER_KEY = "gender";
 
     public ProfileTab() {
         // Required empty public constructor
@@ -68,6 +80,9 @@ public class ProfileTab extends Fragment {
 
         getDataFromServer();
 
+        //edtUserName_ProfileTab.setEnabled(false);
+        edtEmailID_ProfileTab.setEnabled(false);
+
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.dropdown_menu_popup_item, gender);
         genderDropdown_ProfileTab.setAdapter(adapter);
 
@@ -84,14 +99,13 @@ public class ProfileTab extends Fragment {
 
     private void getDataFromServer() {
 
-        edtName_ProfileTab.getEditText().setText((CharSequence) user.get("name" + ""));
-        edtUserName_ProfileTab.getEditText().setText((CharSequence) user.get("username" + ""));
-        edtWebsite_ProfileTab.getEditText().setText((CharSequence) user.get("website" + ""));
-        edtBio_ProfileTab.getEditText().setText((CharSequence) user.get("bio" + ""));
-        edtEmailID_ProfileTab.getEditText().setText((CharSequence) user.get("email" + ""));
-        edtPhoneNumber_ProfileTab.getEditText().setText((CharSequence) user.get("phone_number" + ""));
-        //edtGender_ProfileTab.getEditText().setText((CharSequence) user.get("gender" + ""));
-        genderDropdown_ProfileTab.setText((CharSequence) user.get("gender"+""));
+        edtName_ProfileTab.getEditText().setText((CharSequence) user.get(NAME_KEY + ""));
+        edtUserName_ProfileTab.getEditText().setText((CharSequence) user.get(USER_NAME_KEY + ""));
+        edtWebsite_ProfileTab.getEditText().setText((CharSequence) user.get(WEBSITE_KEY + ""));
+        edtBio_ProfileTab.getEditText().setText((CharSequence) user.get(BIO_KEY + ""));
+        edtEmailID_ProfileTab.getEditText().setText((CharSequence) user.get(EMAIL_ID_KEY + ""));
+        edtPhoneNumber_ProfileTab.getEditText().setText((CharSequence) user.get(PHONE_NUMBER_KEY + ""));
+        genderDropdown_ProfileTab.setText((CharSequence) user.get(GENDER_KEY+""));
 
     }
 
@@ -102,55 +116,62 @@ public class ProfileTab extends Fragment {
         alertDialog.setCancelable(false);
         alertDialog.show();
 
-        user.put("name", edtName_ProfileTab.getEditText().getText().toString());
-        //user.put("username", edtUserName_ProfileTab.getEditText().getText().toString());
-        user.put("website", edtWebsite_ProfileTab.getEditText().getText().toString());
-        user.put("bio", edtBio_ProfileTab.getEditText().getText().toString());
-        //user.put("email", edtEmailID_ProfileTab.getEditText().getText().toString());
-        user.put("phone_number", edtPhoneNumber_ProfileTab.getEditText().getText().toString());
-        user.put("gender", Objects.requireNonNull(genderDropdown_ProfileTab.getText().toString()));
+        user.put(NAME_KEY, edtName_ProfileTab.getEditText().getText().toString());
+        user.put(WEBSITE_KEY, edtWebsite_ProfileTab.getEditText().getText().toString());
+        user.put(BIO_KEY, edtBio_ProfileTab.getEditText().getText().toString());
+        //user.put(EMAIL_ID_KEY, edtEmailID_ProfileTab.getEditText().getText().toString());
+        user.put(PHONE_NUMBER_KEY, edtPhoneNumber_ProfileTab.getEditText().getText().toString());
+        user.put(GENDER_KEY, Objects.requireNonNull(genderDropdown_ProfileTab.getText().toString()));
 
+        if (!edtUserName_ProfileTab.getEditText().getText().toString().equals("")) {
+            user.put(USER_NAME_KEY, edtUserName_ProfileTab.getEditText().getText().toString());
+            edtUserName_ProfileTab.setError(null);
 
-        user.saveInBackground(new SaveCallback() {
-            @Override
-            public void done(ParseException e) {
+            user.saveInBackground(new SaveCallback() {
+                @Override
+                public void done(ParseException e) {
 
-                alertDialog.dismissWithAnimation();
+                    alertDialog.dismissWithAnimation();
 
-                if (e == null) {
+                    if (e == null) {
 
-                    alertDialog = new SweetAlertDialog(getContext(), SweetAlertDialog.SUCCESS_TYPE)
-                            .setTitleText("Updated")
-                            .setContentText("Your profile updated successfully! ")
-                            .setConfirmButton("Ok", new SweetAlertDialog.OnSweetClickListener() {
-                                @Override
-                                public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                    alertDialog.dismissWithAnimation();
-                                }
-                            });
-                    alertDialog.setCancelable(true);
-                    alertDialog.show();
+                        alertDialog = new SweetAlertDialog(getContext(), SweetAlertDialog.SUCCESS_TYPE)
+                                .setTitleText("Updated")
+                                .setContentText("Your profile updated successfully! ")
+                                .setConfirmButton("Ok", new SweetAlertDialog.OnSweetClickListener() {
+                                    @Override
+                                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                        alertDialog.dismissWithAnimation();
+                                    }
+                                });
+                        alertDialog.setCancelable(true);
+                        alertDialog.show();
 
-                    getDataFromServer();
+                        getDataFromServer();
 
-                } else {
+                    } else {
 
-                    alertDialog = new SweetAlertDialog(getContext(), SweetAlertDialog.ERROR_TYPE)
-                            .setTitleText("Failed")
-                            .setContentText("Something went wrong \n Error: " + e)
-                            .setConfirmButton("Ok", new SweetAlertDialog.OnSweetClickListener() {
-                                @Override
-                                public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                    alertDialog.dismissWithAnimation();
-                                }
-                            });
-                    alertDialog.setCancelable(true);
-                    alertDialog.show();
+                        alertDialog = new SweetAlertDialog(getContext(), SweetAlertDialog.ERROR_TYPE)
+                                .setTitleText("Failed")
+                                .setContentText("Something went wrong \n Error: " + e)
+                                .setConfirmButton("Ok", new SweetAlertDialog.OnSweetClickListener() {
+                                    @Override
+                                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                        alertDialog.dismissWithAnimation();
+                                    }
+                                });
+                        alertDialog.setCancelable(true);
+                        alertDialog.show();
+
+                    }
 
                 }
+            });
 
-            }
-        });
+        } else {
+            alertDialog.dismissWithAnimation();
+            edtUserName_ProfileTab.setError("Please Enter the User Name");
+        }
 
     }
 

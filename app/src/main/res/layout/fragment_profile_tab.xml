@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    android:id="@+id/profileTabRootLayout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ProfileTab"
-    android:weightSum="4"
     android:gravity="center"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:weightSum="4"
+    tools:context=".ProfileTab">
 
     <ImageView
         android:id="@+id/imgProfile_ProfileTab"
@@ -39,6 +41,7 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@color/colorPrimaryDark"
                 android:inputType="textPersonName" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -57,6 +60,7 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@color/colorPrimaryDark"
                 android:inputType="textPersonName" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -75,6 +79,7 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@color/colorPrimaryDark"
                 android:inputType="textWebEditText" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -93,6 +98,7 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@color/colorPrimaryDark"
                 android:inputType="textLongMessage" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -111,6 +117,7 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@color/colorPrimaryDark"
                 android:inputType="textEmailAddress" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -129,6 +136,7 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@color/colorPrimaryDark"
                 android:inputType="phone" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -141,7 +149,8 @@
             android:layout_margin="2dp"
             android:hint="Gender"
             app:errorEnabled="true"
-            app:hintEnabled="true">
+            app:hintEnabled="true"
+            app:boxBackgroundColor="@color/colorPrimaryDark">
 
             <AutoCompleteTextView
                 android:id="@+id/genderDropdown_ProfileTab"
