@@ -123,6 +123,7 @@ public class SharePictureTab extends Fragment implements View.OnClickListener {
                                         .setTitleText("Uploaded!")
                                         .setContentText("Your image shared successfully");
                                 alertDialog.show();
+
                             } else {
                                 alertDialog.dismiss();
                                 alertDialog = new SweetAlertDialog(getContext(), SweetAlertDialog.ERROR_TYPE)

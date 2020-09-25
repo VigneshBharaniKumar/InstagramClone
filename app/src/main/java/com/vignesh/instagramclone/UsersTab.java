@@ -1,5 +1,7 @@
 package com.vignesh.instagramclone;
 
+import android.app.UiAutomation;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -12,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -23,7 +26,7 @@ import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
-public class UsersTab extends Fragment {
+public class UsersTab extends Fragment implements UsersRecyclerAdapter.OnClickUserInterface {
 
     private ListView listView;
     private ArrayList usersList;
@@ -39,6 +42,8 @@ public class UsersTab extends Fragment {
     private static final String EMAIL_ID_KEY = "email";
     private static final String PHONE_NUMBER_KEY = "phone_number";
     private static final String GENDER_KEY = "gender";
+
+    public static final String SELECTED_USERS_KEY = "selected_user";
 
     public UsersTab() {
         // Required empty public constructor
@@ -56,7 +61,7 @@ public class UsersTab extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_users_tab_recycler_view, container, false);
@@ -89,7 +94,7 @@ public class UsersTab extends Fragment {
 
                         txtLoading.animate().alpha(0).setDuration(1000);
 
-                        usersRecyclerView.setAdapter(new UsersRecyclerAdapter(usersList));
+                        usersRecyclerView.setAdapter(new UsersRecyclerAdapter(usersList, UsersTab.this));
                         usersRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
                     }
@@ -99,8 +104,22 @@ public class UsersTab extends Fragment {
             }
         });
 
-
-
         return view;
     }
+
+
+    /*INTERFACE METHOD*/
+    @Override
+    public void onClickUser(String selectedUser) {
+        showUsersPost(selectedUser);
+    }
+
+    private void showUsersPost (String selectedUser) {
+
+        Intent intent = new Intent(getContext(), UsersPostActivity.class);
+        intent.putExtra(SELECTED_USERS_KEY, selectedUser);
+        startActivity(intent);
+
+    }
+
 }

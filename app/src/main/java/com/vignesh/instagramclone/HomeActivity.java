@@ -49,7 +49,6 @@ public class HomeActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(viewPager, true);
 
         toolbar.inflateMenu(R.menu.menu_main);
-
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -100,6 +99,6 @@ public class HomeActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-
+        logOut();
     }
 }

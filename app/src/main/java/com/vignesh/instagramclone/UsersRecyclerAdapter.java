@@ -1,20 +1,31 @@
 package com.vignesh.instagramclone;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.parse.FindCallback;
+import com.parse.ParseUser;
 
 import java.util.ArrayList;
 
 public class UsersRecyclerAdapter extends RecyclerView.Adapter<UsersViewHolder> {
 
     private ArrayList usersList;
+    private OnClickUserInterface onClickUserInterface;
 
-    public UsersRecyclerAdapter(ArrayList usersList) {
+    public interface OnClickUserInterface {
+        void onClickUser (String selectedUser);
+    }
+
+    public UsersRecyclerAdapter(ArrayList usersList, OnClickUserInterface onClickUserInterface) {
         this.usersList = usersList;
+        this.onClickUserInterface = onClickUserInterface;
     }
 
     @NonNull
@@ -29,9 +40,17 @@ public class UsersRecyclerAdapter extends RecyclerView.Adapter<UsersViewHolder> 
     }
 
     @Override
-    public void onBindViewHolder(@NonNull UsersViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull UsersViewHolder holder, final int position) {
 
         holder.getTxtUserName().setText(usersList.get(position).toString());
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClickUserInterface.onClickUser(usersList.get(position).toString());
+                /*Intent intent = new Intent(v.getContext(), UsersPostActivity.class);
+                v.getContext().startActivity(intent);*/
+            }
+        });
 
     }
 
@@ -39,4 +58,6 @@ public class UsersRecyclerAdapter extends RecyclerView.Adapter<UsersViewHolder> 
     public int getItemCount() {
         return usersList.size();
     }
+
+
 }
