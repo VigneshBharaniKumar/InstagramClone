@@ -20,4 +20,25 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
+    <ScrollView
+        android:id="@+id/scrollView_UsersPostActivity"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/appBarLayout"
+        app:layout_constraintVertical_bias="1.0">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView_UsersPost"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            tools:layout_editor_absoluteX="5dp"
+            tools:layout_editor_absoluteY="5dp" />
+
+    </ScrollView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
