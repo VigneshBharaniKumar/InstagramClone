@@ -1,16 +1,11 @@
 package com.vignesh.instagramclone;
 
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.parse.FindCallback;
-import com.parse.ParseUser;
 
 import java.util.ArrayList;
 
@@ -21,6 +16,7 @@ public class UsersRecyclerAdapter extends RecyclerView.Adapter<UsersViewHolder> 
 
     public interface OnClickUserInterface {
         void onClickUser (String selectedUser);
+        void onLongClickUser (String selectedUser);
     }
 
     public UsersRecyclerAdapter(ArrayList usersList, OnClickUserInterface onClickUserInterface) {
@@ -47,8 +43,13 @@ public class UsersRecyclerAdapter extends RecyclerView.Adapter<UsersViewHolder> 
             @Override
             public void onClick(View v) {
                 onClickUserInterface.onClickUser(usersList.get(position).toString());
-                /*Intent intent = new Intent(v.getContext(), UsersPostActivity.class);
-                v.getContext().startActivity(intent);*/
+            }
+        });
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                onClickUserInterface.onLongClickUser(usersList.get(position).toString());
+                return true;
             }
         });
 

@@ -17,9 +17,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.parse.FindCallback;
+import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +47,8 @@ public class UsersTab extends Fragment implements UsersRecyclerAdapter.OnClickUs
     private static final String GENDER_KEY = "gender";
 
     public static final String SELECTED_USERS_KEY = "selected_user";
+
+    private SweetAlertDialog alertDialog;
 
     public UsersTab() {
         // Required empty public constructor
@@ -114,11 +119,75 @@ public class UsersTab extends Fragment implements UsersRecyclerAdapter.OnClickUs
         showUsersPost(selectedUser);
     }
 
+    @Override
+    public void onLongClickUser(String selectedUser) {
+        showUserInfo(selectedUser);
+    }
+
     private void showUsersPost (String selectedUser) {
 
         Intent intent = new Intent(getContext(), UsersPostActivity.class);
         intent.putExtra(SELECTED_USERS_KEY, selectedUser);
         startActivity(intent);
+
+    }
+
+    private void showUserInfo(String selectedUser) {
+
+        alertDialog = new SweetAlertDialog(getContext(), SweetAlertDialog.PROGRESS_TYPE);
+        alertDialog.setTitleText("Loading");
+        alertDialog.setCancelable(false);
+        alertDialog.show();
+
+        ParseQuery<ParseUser> parseQuery = ParseUser.getQuery();
+        parseQuery.whereEqualTo(USER_NAME_KEY, selectedUser);
+        parseQuery.getFirstInBackground(new GetCallback<ParseUser>() {
+            @Override
+            public void done(ParseUser user, ParseException e) {
+
+                if (e == null) {
+
+                    if (user != null) {
+
+                        alertDialog.dismissWithAnimation();
+
+                        String userData = "Name : " + user.get(NAME_KEY) + "\n" +
+                                "Website : " + user.get(WEBSITE_KEY) + "\n" +
+                                "Bio : " + user.get(BIO_KEY) + "\n" +
+                                "Phone Number : " + user.get(PHONE_NUMBER_KEY) + "\n" +
+                                "Email : " + user.get(EMAIL_ID_KEY) + "\n" +
+                                "Gender : " + user.get(GENDER_KEY);
+
+                        TextView txtUserData = new TextView(getContext());
+                        txtUserData.setText(userData);
+
+                        alertDialog = new SweetAlertDialog(getContext(), SweetAlertDialog.SUCCESS_TYPE)
+                                .setTitleText(user.getUsername() + "'s Info")
+                                .setCustomView(txtUserData);
+                        alertDialog.show();
+
+                    } else {
+
+                        alertDialog.dismissWithAnimation();
+                        alertDialog = new SweetAlertDialog(getContext(), SweetAlertDialog.WARNING_TYPE)
+                                .setTitleText("User Details")
+                                .setContentText("User not Found!");
+                        alertDialog.show();
+
+                    }
+
+                } else {
+
+                    alertDialog.dismissWithAnimation();
+                    alertDialog = new SweetAlertDialog(getContext(), SweetAlertDialog.ERROR_TYPE)
+                            .setTitleText("User Details")
+                            .setContentText("Error " + " : " + e.getMessage());
+                    alertDialog.show();
+
+                }
+
+            }
+        });
 
     }
 
